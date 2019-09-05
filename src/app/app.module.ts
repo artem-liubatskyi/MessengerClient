@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { ConfigService } from './shared/config.service';
+import { AccountService } from './services/account.service';
 
 export function tokenGetter() {
   let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -37,7 +38,7 @@ export function tokenGetter() {
       }
     }),
   ],
-  providers: [AuthenticationService, ConfigService],
+  providers: [AuthenticationService, ConfigService, AccountService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -6,9 +6,9 @@ import { first } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Component({
-    selector: 'app-register',
-    templateUrl: './register.component.html',
-    styleUrls: ['./register.component.css']
+    selector: 'app-registration',
+    templateUrl: './registration.component.html',
+    styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent implements OnInit {
     registerForm: FormGroup;
