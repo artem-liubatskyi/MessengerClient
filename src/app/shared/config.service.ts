@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ConfigService {
+    get unauthorizedUrl(){
+        return '/login';
+    }
     get registrationUrl(){
         return this.apiURI + '';
     }
