@@ -12,6 +12,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { ConfigService } from './shared/config.service';
 import { AccountService } from './services/account.service';
+import { CreateChatComponent } from './components/create-chat/create-chat.component';
+import { ChatListComponent } from './components/chat-list/chat-list.component';
+import { ChatPreviewComponent } from './components/chat-preview/chat-preview.component';
+import { ChatNavbarComponent } from './components/chat-navbar/chat-navbar.component';
+import { ChatListNavbarComponent } from './components/chat-list-navbar/chat-list-navbar.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { MessageComponent } from './components/message/message.component';
+import { CreateMessageComponent } from './components/create-message/create-message.component';
 
 export function tokenGetter() {
   let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -23,7 +31,15 @@ export function tokenGetter() {
   declarations: [
     AppComponent,
     LoginComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    CreateChatComponent,
+    ChatListComponent,
+    ChatPreviewComponent,
+    ChatNavbarComponent,
+    ChatListNavbarComponent,
+    ChatComponent,
+    MessageComponent,
+    CreateMessageComponent
   ],
   imports: [
     CommonModule,
