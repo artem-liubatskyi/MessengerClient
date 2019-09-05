@@ -1,72 +1,56 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { UserManager, UserManagerSettings, User } from 'oidc-client';
-import { BehaviorSubject } from 'rxjs'; 
-
-import { ConfigService } from '../shared/config.service';
+import { map } from 'rxjs/operators';
+import { User } from '../models/user';
+import { Observable } from 'rxjs';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { BaseService } from '../shared/base.service';
+import { ConfigService } from '../shared/config.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthService extends BaseService  {
+@Injectable()
+export class AuthenticationService extends BaseService {
 
-  private _authNavStatusSource = new BehaviorSubject<boolean>(false);
-
-  private manager = new UserManager(getClientSettings());
-  private user: User | null;
-
-  constructor(private http: HttpClient, private configService: ConfigService) { 
-    super();     
-    
-    this.manager.getUser().then(user => { 
-      this.user = user;      
-      this._authNavStatusSource.next(this.isAuthenticated());
-    });
+  constructor(private http: HttpClient, private jwtHelper: JwtHelperService, private config: ConfigService) {
+    super();
   }
 
-  login() { 
-    return this.manager.signinRedirect();   
+  public isAuthenticated(): boolean {
+    let currentUser = JSON.parse(localStorage.getItem(this.config.currentUser));
+    if (currentUser == null || this.jwtHelper.isTokenExpired(currentUser.accessToken))
+      return false;
+    return true;
+  }
+  user(): User {
+    return JSON.parse(localStorage.getItem(this.config.currentUser));
+  }
+  login(userName: string, password: string): Observable<User> {
+    return this.http.post<User>(this.config.authenticateUrl, { userName: userName, password: password })
+      .pipe(map((user: User) => {
+        if (user && user.accessToken) {
+          localStorage.setItem(this.config.currentUser, JSON.stringify(user));
+        }
+        return user;
+      }));
+  }
+  logout() {
+    localStorage.removeItem(this.config.currentUser);
+  }
+  refreshToken(): Observable<User> {
+
+    let currentUser = JSON.parse(localStorage.getItem(this.config.currentUser));
+
+    return this.http.post<User>(this.config.refreshTokenUrl, { 'token': currentUser.accessToken, 'refreshToken': currentUser.refreshToken })
+      .pipe(
+        map(user => {
+          return user;
+        }));
   }
 
-  async completeAuthentication() {
-      this.user = await this.manager.signinRedirectCallback();
-      this._authNavStatusSource.next(this.isAuthenticated());      
-  }  
+  getAuthToken(): string {
+    let currentUser = JSON.parse(localStorage.getItem(this.config.currentUser));
 
-  register(userRegistration: any) {    
-    return this.http.post(this.configService.authApiURI + '/account', userRegistration).pipe(catchError(this.handleError));
+    if (currentUser != null) {
+      return currentUser.accessToken;
+    }
   }
-
-  isAuthenticated(): boolean {
-    return this.user != null && !this.user.expired;
-  }
-
-  get authorizationHeaderValue(): string {
-    return `${this.user.token_type} ${this.user.access_token}`;
-  }
-
-  get name(): string {
-    return this.user != null ? this.user.profile.name : '';
-  }
-
-  signout() {
-    this.manager.signoutRedirect();
-  }
-}
-
-export function getClientSettings(): UserManagerSettings {
-  return {
-      authority: 'http://localhost:5000',
-      client_id: 'angular_spa',
-      redirect_uri: 'http://localhost:4200/auth-callback',
-      post_logout_redirect_uri: 'http://localhost:4200/',
-      response_type:"id_token token",
-      scope:"openid profile email api.read",
-      filterProtocolClaims: true,
-      loadUserInfo: true,
-      automaticSilentRenew: true,
-      silent_redirect_uri: 'http://localhost:4200/silent-refresh.html'
-  };
 }
