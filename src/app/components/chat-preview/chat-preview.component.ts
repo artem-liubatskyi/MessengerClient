@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { ChatPreview } from 'src/app/models/chat-preview.model';
 
 @Component({
   selector: 'app-chat-preview',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChatPreviewComponent implements OnInit {
 
+  @Output() connectToChat = new EventEmitter<string>();
+  @Input() chatPreview: ChatPreview;
+
   constructor() { }
 
   ngOnInit() {
+  }
+  onClick(){
+    this.connectToChat.emit(this.chatPreview.id);
   }
 
 }
