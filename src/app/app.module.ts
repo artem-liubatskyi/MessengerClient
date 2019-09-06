@@ -20,6 +20,7 @@ import { ChatListNavbarComponent } from './components/chat-list-navbar/chat-list
 import { ChatComponent } from './components/chat/chat.component';
 import { MessageComponent } from './components/message/message.component';
 import { CreateMessageComponent } from './components/create-message/create-message.component';
+import { AccountComponent } from './components/account/account.component';
 
 export function tokenGetter() {
   let currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -39,7 +40,8 @@ export function tokenGetter() {
     ChatListNavbarComponent,
     ChatComponent,
     MessageComponent,
-    CreateMessageComponent
+    CreateMessageComponent,
+    AccountComponent
   ],
   imports: [
     CommonModule,

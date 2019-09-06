@@ -9,7 +9,6 @@ import { Message } from 'src/app/models/message.model';
 export class MessageComponent implements OnInit {
 
   message: Message;
-  
   constructor() { }
 
   ngOnInit() {

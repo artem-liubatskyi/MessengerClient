@@ -1,1 +1,5 @@
-<p>chat-list works!</p>
+<div *ngIf="chats">
+    <div *ngFor="let chat of chats">
+        <app-chat-preview [chat] = "chat"></app-chat-preview>
+    </div>
+</div>

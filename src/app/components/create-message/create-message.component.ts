@@ -8,8 +8,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 })
 export class CreateMessageComponent implements OnInit {
 
-  @Output() sendMessage = new EventEmitter<string>();
-  
+  @Output() sendMessage = new EventEmitter<string>(); 
   messageForm: FormGroup;
   formBuilder: FormBuilder;
 

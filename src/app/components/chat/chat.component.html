@@ -1,1 +1,9 @@
-<p>chat works!</p>
+<div *ngIf="chat && chat.messages; else nomessages">
+    <div *ngFor="let message of chat.messages">
+        <div>
+            <app-message [message]="message"></app-message>
+        </div>
+    </div>
+</div>
+<ng-template #nomessages>No messages</ng-template>
+<app-create-message></app-create-message>
